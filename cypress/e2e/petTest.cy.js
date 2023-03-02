@@ -12,11 +12,6 @@ pet.photoUrls[0] = faker.internet.url()
 pet.tags[0].id = faker.random.numeric(4)
 pet.tags[0].name = faker.color.human()
 
-
-let updatedCategoryId = parseInt(faker.random.numeric(10))
-let updatedCategoryName = faker.animal.dog()
-let updatedPetName = faker.music.genre()
-let updatedPetStatus = "sold"
 let header = "'api-key': '23'"
 let errorMessage = 'Pet not found'
 let errorResponseType = 'error'
@@ -61,22 +56,7 @@ it(`Update pet with id ${pet.id}`, () => {
   cy.request({
     method: 'PUT',
     url: '/pet',
-    body: {
-      "id": pet.id,
-      "category": {
-        "id": updatedCategoryId,
-        "name": updatedCategoryName
-      },
-      "name": updatedPetName,
-      "photoUrls": pet.photoUrls,
-      "tags": [
-        {
-          "id": pet.tags[0].id,
-          "name": pet.tags[0].name,
-        }
-      ],
-      "status": pet.status
-    }
+    body: pet   
   }).then(response => {
     expect(response.status).to.be.equal(200)
     expect(response.statusText).to.be.equal('OK')
@@ -89,9 +69,9 @@ it(`Update pet with id ${pet.id}`, () => {
     expect(response.statusText).to.be.equal('OK')
     expect(response.isOkStatusCode).to.be.true
     expect(response.body.id).to.be.equal(pet.id)
-    expect(response.body.name).to.be.equal(updatedPetName)
-    expect(response.body.category.id).to.be.equal(updatedCategoryId)
-    expect(response.body.category.name).to.be.equal(updatedCategoryName)
+    expect(response.body.name).to.be.equal(pet.name)
+    expect(response.body.category.id).to.be.equal(pet.category.id)
+    expect(response.body.category.name).to.be.equal(pet.category.name)
   })
 })
 
@@ -112,10 +92,7 @@ it(`Update pet with id ${pet.id} using form data`, () => {
   cy.request({
     method: 'POST',
     url: `/pet/${pet.id}`,
-    body: {
-      name: updatedPetName,
-      status: updatedPetStatus,
-    },
+    body: pet,
     form: true
   }).then(response => {
     expect(response.status).to.be.equal(200)
@@ -130,10 +107,10 @@ it(`Update pet with id ${pet.id} using form data`, () => {
     expect(response.statusText).to.be.equal('OK')
     expect(response.isOkStatusCode).to.be.true
     expect(response.body.id).to.be.equal(pet.id)
-    expect(response.body.name).to.be.equal(updatedPetName)
-    expect(response.body.category.id).to.be.equal(updatedCategoryId)
-    expect(response.body.category.name).to.be.equal(updatedCategoryName)
-    expect(response.body.status).to.be.equal(updatedPetStatus)
+    expect(response.body.name).to.be.equal(pet.name)
+    expect(response.body.category.id).to.be.equal(pet.category.id)
+    expect(response.body.category.name).to.be.equal(pet.category.name)
+    expect(response.body.status).to.be.equal(pet.status)
   })
 })
 
